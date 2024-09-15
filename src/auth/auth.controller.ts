@@ -1,6 +1,7 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { TokenResponseDto } from './dto/response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,9 +16,8 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req, @Res() res) {
+  googleAuthRedirect(@Req() req): Promise<TokenResponseDto> {
     // sign in and give JWT token
-    const token = this.authService.login(req.user);
-    res.json(token);
+    return this.authService.login(req.user);
   }
 }
